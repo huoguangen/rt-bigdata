@@ -10,7 +10,6 @@
     <version>1.0.0</version>
     <modules>
         <module>rt-flink</module>
-        <module>rt-ETL</module>
     </modules>
 
     <properties>
@@ -20,7 +19,7 @@
 
         <!--<scala.version>2.12.4</scala.version>-->
         <scala.binary.version>2.11</scala.binary.version>
-        <flink.version>1.10.0</flink.version>
+        <flink.version>1.12.0</flink.version>
     </properties>
 
 
