@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cgy</groupId>
+    <artifactId>rt-bigdata</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+    <modules>
+        <module>rt-flink</module>
+        <module>rt-ETL</module>
+    </modules>
+
+    <properties>
+        <!--基础部分 通用配置-->
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+
+        <!--<scala.version>2.12.4</scala.version>-->
+        <scala.binary.version>2.11</scala.binary.version>
+        <flink.version>1.10.0</flink.version>
+    </properties>
+
+
+</project>
