@@ -6,11 +6,12 @@ import java.text.SimpleDateFormat
 import java.util.{Calendar, Locale}
 
 /**
- *@Description: 非组件的公共方法
+ *@Description: 非组件非业务规则的公共方法
  */
 object CommonTool {
 
   // TODO ============================================ udf函数 ============================================
+  // ============================================ 字符串相关 ============================================
   // 过滤表情
   def getSubsidy(str: String): String = {
     var out = new StringBuffer()
@@ -45,13 +46,92 @@ object CommonTool {
     }
   }
 
+  // 特殊字符替换 表情
+  def specialStr(str: String): String = {
+    var newStr: String = ""
+    if (StringUtils.isNotBlank(str)) {
+      newStr = str.replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "")
+    }
+    newStr.trim
+  }
+
+
+
+
+
 
   // TODO ============================================ 代码方法 能用sql实现 ============================================
+  // ============================================ 时间相关 ============================================
+  // 得到每隔10分钟的时间段
+  // 2021-01-21 14:58:22 →→→ 14:50:00-14:59:59
+  def getTimeInterval(str: String) = {
+    val time = str.substring(11, 19)
+    val preTime = time.substring(0, 3) + time.substring(3, 4) + "0" + ":00"
+    val hh = time.substring(0, 3)
+    val mm = time.substring(3, 4)
+    val aftTime = hh + mm + "9:59"
+    preTime + "-" + aftTime
+  }
+
   /**
-   * 获取星期几 返回string
-   * @param dateStr
-   * @return String
+   * 获取当天前后的日期 2020-03-26
+   * @param strDate
+   * @param day
+   * Calendar是日历类，该类将所有可能用到的时间信息封装为静态成员变量，方便获取
    */
+  def getDaysBefore(strDate: String, day: Int): String = {
+    var before: String = "未知"
+    if (StringUtils.isNotBlank(strDate)) {
+      val formatter: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US)
+      val cal: Calendar = Calendar.getInstance()
+      val dt = formatter.parse(strDate)
+      cal.setTime(dt)
+      // 修改当前时间为n天后/前
+      cal.add(Calendar.DATE, day)
+      before = formatter.format(cal.getTime())
+    }
+    before
+  }
+
+  // 获取两个日期相差秒数
+  def getDateBetweenTime(startDateStr: String, lastDateStr: String): Long = {
+    var between_days: Long = 0
+    if (StringUtils.isNotBlank(startDateStr) && StringUtils.isNotBlank(lastDateStr)) {
+      val sdf: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+      val cal = Calendar.getInstance()
+      cal.setTime(sdf.parse(startDateStr))
+      val time1 = cal.getTimeInMillis()
+      cal.setTime(sdf.parse(lastDateStr))
+      val time2 = cal.getTimeInMillis()
+      between_days = Math.abs(time2 - time1) / 1000
+    }
+    between_days
+  }
+
+  // 获取当月最后一天
+  def getMonthLastday(date: String): String = {
+    var monthLastday: String = null
+    if (StringUtils.isNotBlank(date)) {
+      val year = date.substring(0, 4).toInt
+      // 月
+      val month = date.substring(5, 7).toInt
+      // 日
+      val day = date.substring(8, 10).toInt
+      val cal = Calendar.getInstance
+      // 设置年
+      cal.set(Calendar.YEAR, year)
+      // 设置月  注意: 需要 -1，才是原来月份的值
+      cal.set(Calendar.MONTH, month - 1)
+      // 设置最后一天
+      cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
+
+      monthLastday = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime())
+    }
+
+    monthLastday
+  }
+
+  // 获取星期几 返回string
   def getDayWeek(dateStr: String) = {
     var dayWeek: String = null
     if (StringUtils.isNotBlank(dateStr)) {
@@ -68,8 +148,5 @@ object CommonTool {
     }
     dayWeek
   }
-
-
-
 
 }
